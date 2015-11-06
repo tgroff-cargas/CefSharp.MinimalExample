@@ -6,6 +6,8 @@ using System;
 using System.Windows.Forms;
 using CefSharp.MinimalExample.WinForms.Controls;
 using CefSharp.WinForms;
+using System.Reflection;
+using System.IO;
 
 namespace CefSharp.MinimalExample.WinForms
 {
@@ -24,6 +26,21 @@ namespace CefSharp.MinimalExample.WinForms
             {
                 Dock = DockStyle.Fill,
             };
+
+
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = "CefSharp.MinimalExample.WinForms.Resources.CallbackTest.html";
+
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                string result = reader.ReadToEnd();
+                browser.LoadHtml(result, "http://rendering/");
+            }
+
+
+            
+
             toolStripContainer.ContentPanel.Controls.Add(browser);
 
             browser.LoadingStateChanged += OnLoadingStateChanged;
@@ -35,6 +52,8 @@ namespace CefSharp.MinimalExample.WinForms
             var bitness = Environment.Is64BitProcess ? "x64" : "x86";
             var version = String.Format("Chromium: {0}, CEF: {1}, CefSharp: {2}, Environment: {3}", Cef.ChromiumVersion, Cef.CefVersion, Cef.CefSharpVersion, bitness);
             DisplayOutput(version);
+
+            browser.RegisterJsObject("BoundObject", new BoundObject());
         }
 
         private void OnBrowserConsoleMessage(object sender, ConsoleMessageEventArgs args)
@@ -148,6 +167,11 @@ namespace CefSharp.MinimalExample.WinForms
             {
                 browser.Load(url);
             }
+        }
+
+        private void showDevToolsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            browser.ShowDevTools();
         }
     }
 }

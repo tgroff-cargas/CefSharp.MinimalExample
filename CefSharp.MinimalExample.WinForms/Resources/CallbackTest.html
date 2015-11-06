@@ -1,0 +1,42 @@
+<html>
+<head>
+	<script src='https://code.jquery.com/jquery-2.1.4.min.js' type='text/javascript'></script>
+	<script type='text/javascript'>
+		function callback() {
+			$('#log').prepend("<p>" + JSON.stringify(arguments) + "</p>");
+		}
+	
+		$(document).ready(function() {
+			$('#btnString').click(function() {
+				BoundObject.testCallbackString(callback);
+			})
+			$('#btnStruct').click(function() {
+				BoundObject.testCallbackStruct(callback);
+			})
+			$('#btnClass').click(function() {
+				BoundObject.testCallbackClass(callback);
+			})
+		})
+	</script>
+</head>
+<body>
+	<p>
+		Example of returning different values in a javascrip callback.
+	</p>
+	<p>
+		Callback With String - this is the standard example that is included in CefSharp.Example
+	</p>
+	<p>
+		Callback With Struct - this attempts to return a simple struct, however it receives null
+	</p>
+	<p>
+		Callback With class - this attempts to return a simple class, however it encounters a "Complex types cannot be serialized in Cef lists"
+	</p>
+	<button id='btnString' type='button'>Callback With String</button>
+	<button id='btnStruct' type='button'>Callback With Struct</button>
+	<button id='btnClass' type='button'>Callback With Class</button>
+	<div id="log">	
+	</div>
+
+</body>
+</html>
